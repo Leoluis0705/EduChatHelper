@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试师生互评报告 - Markdown格式</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>测试师生互评报告 - Markdown格式</h1>
+        
+        <div class="test-section">
+            <h3>测试功能</h3>
+            <button onclick="testMarkdownParsing()">测试Markdown解析</button>
+            <button onclick="testDisplayFunction()">测试显示功能</button>
+            <button onclick="testFullReport()">测试完整报告</button>
+        </div>
+        
+        <div class="result" id="testResult">
+            测试结果将显示在这里...
+        </div>
+    </div>
+
+    <script>
+        // 模拟一个实际的Markdown报告内容
+        const sampleMarkdown = `# 师生互评报告
+
+## 分项得分
+内容：85
+结构：78
+
+## 格式检查
+**内容格式**：✅无缺失项
+**结构格式**：✅无缺失项
+
+## 综合评价
+**总分**：82
+**等级**：B+
+**简评**：整体表现良好，内容充实，结构清晰，但需要加强语法准确性。
+
+## 亮点（优先肯定）
+- 内容丰富，观点明确
+- 结构清晰，逻辑性强
+- 词汇使用恰当
+
+## 易错点（具体可改方向）
+- 注意时态一致性
+- 加强复杂句式的使用
+- 提高语法准确性
+
+## 学生画像（学习建议）
+词汇水平：B2
+写作风格：正式严谨
+
+## 建议方向
+- 多练习复杂句式
+- 加强语法学习
+- 扩大词汇量`;
+
+        function testMarkdownParsing() {
+            const resultDiv = document.getElementById('testResult');
+            try {
+                const parsedData = parseMarkdownReport(sampleMarkdown);
+                resultDiv.innerHTML = '<h3>Markdown解析结果：</h3><pre>' + JSON.stringify(parsedData, null, 2) + '</pre>';
+            } catch (error) {
+                resultDiv.innerHTML = '<h3>解析错误：</h3><pre>' + error.message + '</pre>';
+            }
+        }
+
+        function testDisplayFunction() {
+            const resultDiv = document.getElementById('testResult');
+            try {
+                const parsedData = parseMarkdownReport(sampleMarkdown);
+                const html = generateTestHTML(parsedData);
+                resultDiv.innerHTML = '<h3>显示功能测试：</h3>' + html;
+            } catch (error) {
+                resultDiv.innerHTML = '<h3>显示错误：</h3><pre>' + error.message + '</pre>';
+            }
+        }
+
+        function testFullReport() {
+            const resultDiv = document.getElementById('testResult');
+            try {
+                const parsedData = parseMarkdownReport(sampleMarkdown);
+                const fullHTML = displayEvaluationReport(parsedData);
+                resultDiv.innerHTML = '<h3>完整报告显示：</h3>' + fullHTML;
+            } catch (error) {
+                resultDiv.innerHTML = '<h3>完整报告错误：</h3><pre>' + error.message + '</pre>';
+            }
+        }
+
+        // 复制主文件中的解析函数
+        function parseMarkdownReport(markdown) {
+            const data = {};
+            const lines = markdown.split('\n');
+            let currentSection = '';
+            let currentContent = [];
+            
+            lines.forEach(line => {
+                line = line.trim();
+                
+                // 检测模块标题
+                if (line.includes('分项得分')) {
+                    currentSection = '分项得分';
+                    currentContent = [];
+                } else if (line.includes('格式检查')) {
+                    currentSection = '格式检查';
+                    currentContent = [];
+                } else if (line.includes('综合评价')) {
+                    currentSection = '综合评价';
+                    currentContent = [];
+                } else if (line.includes('亮点（优先肯定）')) {
+                    currentSection = '亮点（优先肯定）';
+                    currentContent = [];
+                } else if (line.includes('易错点（具体可改方向）')) {
+                    currentSection = '易错点（具体可改方向）';
+                    currentContent = [];
+                } else if (line.includes('学生画像（学习建议）')) {
+                    currentSection = '学生画像（学习建议）';
+                    currentContent = [];
+                } else if (line.includes('建议方向')) {
+                    currentSection = '建议方向';
+                    currentContent = [];
+                }
+                // 提取具体项目数据
+                else if (line.includes('内容：')) {
+                    data['内容得分'] = extractScoreValue(line, '内容：');
+                } else if (line.includes('结构：')) {
+                    data['结构得分'] = extractScoreValue(line, '结构：');
+                } else if (line.includes('内容格式') || line.includes('**内容格式**')) {
+                    data['内容格式'] = extractFormatValue(line, '内容格式');
+                } else if (line.includes('结构格式') || line.includes('**结构格式**')) {
+                    data['结构格式'] = extractFormatValue(line, '结构格式');
+                } else if (line.includes('总分') || line.includes('**总分**')) {
+                    data['总分'] = extractTotalValue(line, '总分');
+                } else if (line.includes('等级') || line.includes('**等级**')) {
+                    data['等级'] = extractGradeValue(line, '等级');
+                } else if (line.includes('简评') || line.includes('**简评**')) {
+                    data['简评'] = extractCommentValue(line, '简评');
+                } else if (line.includes('词汇水平')) {
+                    data['词汇水平'] = extractLevelValue(line, '词汇水平');
+                } else if (line.includes('写作风格')) {
+                    data['写作风格'] = extractStyleValue(line, '写作风格');
+                }
+                // 收集模块内容
+                else if (currentSection && line && !line.startsWith('#') && !line.startsWith('##') && !line.startsWith('###')) {
+                    if (line) {
+                        currentContent.push(line);
+                    }
+                }
+                
+                // 保存模块内容
+                if (currentSection && currentContent.length > 0) {
+                    data[currentSection] = currentContent.join('\n');
+                }
+            });
+            
+            return data;
+        }
+
+        // 提取函数
+        function extractScoreValue(line, key) {
+            const regex = new RegExp(`${key}\\s*(\\d+)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+
+        function extractFormatValue(line, key) {
+            const regex = new RegExp(`${key}[：:]?\\s*([^\\s]*\\s*[^\\s]*)`);
+            const match = line.match(regex);
+            if (match) {
+                return match[1].replace(/[✅√]/g, '').replace(/\*\*/g, '').trim() || '无缺失项';
+            }
+            return 'N/A';
+        }
+
+        function extractTotalValue(line, key) {
+            const regex = new RegExp(`${key}[：:]?\\s*(\\d+)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+
+        function extractGradeValue(line, key) {
+            const regex = new RegExp(`${key}[：:]?\\s*([A-F][+-]?)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+
+        function extractCommentValue(line, key) {
+            const regex = new RegExp(`${key}[：:]?\\s*(.+)`);
+            const match = line.match(regex);
+            if (match) {
+                return match[1].replace(/\*\*/g, '').trim();
+            }
+            return 'N/A';
+        }
+
+        function extractLevelValue(line, key) {
+            const regex = new RegExp(`${key}[：:]?\\s*([A-Z]\\d?)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+
+        function extractStyleValue(line, key) {
+            const regex = new RegExp(`${key}[：:]?\\s*(.+)`);
+            const match = line.match(regex);
+            return match ? match[1].trim() : 'N/A';
+        }
+
+        // 简化的显示函数用于测试
+        function generateTestHTML(data) {
+            let html = '<div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">';
+            html += '<h4>分项得分</h4>';
+            html += '<p>内容得分: ' + (data['内容得分'] || 'N/A') + '</p>';
+            html += '<p>结构得分: ' + (data['结构得分'] || 'N/A') + '</p>';
+            html += '</div>';
+            return html;
+        }
+
+        // 完整的显示函数
+        function displayEvaluationReport(reportData) {
+            if (!reportData) return '<div>暂无数据</div>';
+            
+            let data = reportData;
+            if (Array.isArray(reportData)) {
+                data = {};
+                reportData.forEach((item) => {
+                    const key = item['项目'] || '';
+                    const value = item['内容'] || '';
+                    if (key && value) {
+                        data[key] = value;
+                    }
+                });
+            }
+
+            let html = '<div class="evaluation-report">';
+            
+            // 第一个模块：分项得分
+            html += '<div class="score-section">';
+            html += '<h4>分项得分</h4>';
+            html += '<div class="score-boxes">';
+            html += '<div class="info-box"><div class="box-header">内容得分</div><div class="box-content">' + (data['内容得分'] || 'N/A') + '</div></div>';
+            html += '<div class="info-box"><div class="box-header">结构得分</div><div class="box-content">' + (data['结构得分'] || 'N/A') + '</div></div>';
+            html += '</div></div>';
+            
+            // 第二个模块：格式检查
+            html += '<div class="format-section">';
+            html += '<h4>格式检查</h4>';
+            html += '<div class="format-boxes">';
+            html += '<div class="info-box"><div class="box-header">内容格式</div><div class="box-content">' + (data['内容格式'] || 'N/A') + '</div></div>';
+            html += '<div class="info-box"><div class="box-header">结构格式</div><div class="box-content">' + (data['结构格式'] || 'N/A') + '</div></div>';
+            html += '</div></div>';
+            
+            // 第三个模块：综合评价
+            html += '<div class="comprehensive-section">';
+            html += '<h4>综合评价</h4>';
+            html += '<div class="comprehensive-boxes">';
+            html += '<div class="info-box"><div class="box-header">总分和等级</div><div class="box-content">' + (data['总分'] || 'N/A') + ' ' + (data['等级'] ? '(' + data['等级'] + ')' : '') + '</div></div>';
+            html += '<div class="info-box left-align"><div class="box-header">简评</div><div class="box-content">' + (data['简评'] || 'N/A') + '</div></div>';
+            html += '</div></div>';
+            
+            // 其他模块...
+            html += '</div>';
+            return html;
+        }
+    </script>
+</body>
+</html>

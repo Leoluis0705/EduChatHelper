@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试报告展示功能</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>报告展示功能测试</h1>
+    
+    <div>
+        <button onclick="testStudentsAPI()">测试学生列表API</button>
+        <button onclick="testGrammarAPI()">测试语法报告API</button>
+        <button onclick="testEvaluationAPI()">测试师生互评API</button>
+        <button onclick="openReportsPage()">打开报告展示页面</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        function testStudentsAPI() {
+            fetch('/api/students')
+                .then(response => response.json())
+                .then(data => {
+                    const result = document.createElement('div');
+                    result.className = 'test-result success';
+                    result.innerHTML = `<strong>学生列表API测试成功</strong><br>
+                        学生总数: ${data.total}<br>
+                        第一个学生: ${data.students[0].name} (学号: ${data.students[0].studentId})`;
+                    document.getElementById('results').appendChild(result);
+                })
+                .catch(error => {
+                    const result = document.createElement('div');
+                    result.className = 'test-result error';
+                    result.innerHTML = `<strong>学生列表API测试失败</strong><br>${error}`;
+                    document.getElementById('results').appendChild(result);
+                });
+        }
+        
+        function testGrammarAPI() {
+            fetch('/api/grammar-report/1')
+                .then(response => response.json())
+                .then(data => {
+                    const result = document.createElement('div');
+                    result.className = 'test-result success';
+                    result.innerHTML = `<strong>语法报告API测试成功</strong><br>
+                        报告数据行数: ${data.report.length}<br>
+                        学生: ${data.student.name || '未知'}`;
+                    document.getElementById('results').appendChild(result);
+                })
+                .catch(error => {
+                    const result = document.createElement('div');
+                    result.className = 'test-result error';
+                    result.innerHTML = `<strong>语法报告API测试失败</strong><br>${error}`;
+                    document.getElementById('results').appendChild(result);
+                });
+        }
+        
+        function testEvaluationAPI() {
+            fetch('/api/evaluation-report/丁彦博')
+                .then(response => response.text())
+                .then(data => {
+                    const result = document.createElement('div');
+                    result.className = 'test-result success';
+                    result.innerHTML = `<strong>师生互评API测试成功</strong><br>
+                        报告内容长度: ${data.length} 字符<br>
+                        包含标题: ${data.includes('作文批改报告')}`;
+                    document.getElementById('results').appendChild(result);
+                })
+                .catch(error => {
+                    const result = document.createElement('div');
+                    result.className = 'test-result error';
+                    result.innerHTML = `<strong>师生互评API测试失败</strong><br>${error}`;
+                    document.getElementById('results').appendChild(result);
+                });
+        }
+        
+        function openReportsPage() {
+            window.open('reports.html', '_blank');
+        }
+    </script>
+</body>
+</html>

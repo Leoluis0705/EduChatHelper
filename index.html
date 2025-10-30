@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高中英语写作三维反馈系统 - 登录</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-container {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .role-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+        
+        .role-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .role-tab.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .login-form {
+            display: none;
+        }
+        
+        .login-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .login-btn:hover {
+            background: #0056b3;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #333;">高中英语写作三维反馈系统</h2>
+        
+        <div class="role-tabs">
+            <button class="role-tab active" data-role="student">学生</button>
+            <button class="role-tab" data-role="teacher">老师</button>
+        </div>
+        
+        <div class="login-form active" id="student-form">
+            <div class="form-group">
+                <label for="student-username">姓名</label>
+                <input type="text" id="student-username" placeholder="请输入姓名">
+            </div>
+            <div class="form-group">
+                <label for="student-password">密码</label>
+                <input type="password" id="student-password" placeholder="请输入密码">
+            </div>
+            <button class="login-btn" onclick="login('student')">学生登录</button>
+            <div class="error-message" id="student-error"></div>
+            
+            <div class="info-section" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 14px; color: #666;">
+                <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">使用说明</h4>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>请输入您的真实姓名进行登录</li>
+                    <li>系统将显示您参与过的所有考试</li>
+                    <li>点击考试名称查看详细的语法报告和师生互评报告</li>
+                    <li>您只能查看自己的报告，无法查看其他同学的报告</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="login-form" id="teacher-form">
+            <div class="form-group">
+                <label for="teacher-username">老师账号</label>
+                <input type="text" id="teacher-username" placeholder="请输入老师账号">
+            </div>
+            <div class="form-group">
+                <label for="teacher-password">密码</label>
+                <input type="password" id="teacher-password" placeholder="请输入密码">
+            </div>
+            <button class="login-btn" onclick="login('teacher')">老师登录</button>
+            <div class="error-message" id="teacher-error"></div>
+        </div>
+    </div>
+
+    <script>
+        // 角色切换
+        document.querySelectorAll('.role-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+                
+                // 添加active类到当前标签和对应表单
+                this.classList.add('active');
+                const role = this.getAttribute('data-role');
+                document.getElementById(role + '-form').classList.add('active');
+            });
+        });
+        
+        // 登录函数
+        async function login(role) {
+            const username = document.getElementById(role + '-username').value;
+            const password = document.getElementById(role + '-password').value;
+            const errorElement = document.getElementById(role + '-error');
+            
+            // 清空错误信息
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+            
+            if (!username || !password) {
+                errorElement.textContent = '请输入账号和密码';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            try {
+                // 读取用户数据
+                const response = await fetch('users.csv');
+                const csvData = await response.text();
+                const users = parseCSV(csvData);
+                
+                // 验证用户
+                const user = users.find(u => u.username === username && u.password === password && u.role === role);
+                
+                if (user) {
+                    // 登录成功
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    if (role === 'teacher') {
+                        window.location.href = 'teacher.html';
+                    } else {
+                        // 学生登录后直接跳转到报告页面
+                        window.location.href = 'student-reports.html';
+                    }
+                } else {
+                    errorElement.textContent = '账号或密码错误';
+                    errorElement.style.display = 'block';
+                }
+            } catch (error) {
+                errorElement.textContent = '登录失败，请稍后重试';
+                errorElement.style.display = 'block';
+                console.error('Login error:', error);
+            }
+        }
+        
+        // 解析CSV数据
+        function parseCSV(csv) {
+            const lines = csv.split('\n').filter(line => line.trim());
+            const headers = lines[0].split(',');
+            const users = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                const user = {};
+                headers.forEach((header, index) => {
+                    user[header] = values[index];
+                });
+                users.push(user);
+            }
+            
+            return users;
+        }
+        
+        // 检查是否已登录，但不再自动跳转
+        window.addEventListener('load', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                // 在对应的输入框中显示已登录的用户名
+                if (user.role === 'teacher') {
+                    document.getElementById('teacher-username').value = user.username;
+                } else if (user.role === 'student') {
+                    document.getElementById('student-username').value = user.username;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

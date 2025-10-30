@@ -1,0 +1,25 @@
+{
+  "name": "educhat-grader-web",
+  "version": "1.0.0",
+  "description": "英语作文自动批改技术智能体网页界面",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "archiver": "^6.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.4",
+    "xlsx": "^0.18.5"
+  },
+  "keywords": [
+    "pdf",
+    "upload",
+    "educhat",
+    "grader"
+  ],
+  "author": "",
+  "license": "MIT"
+}

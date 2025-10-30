@@ -2,8 +2,212 @@ nohup: ignoring input
 服务器运行在 http://localhost:3000
 请确保main.py文件存在于项目根目录
 文件上传路径: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/in
-获取进度参数: { examName: 'ç¬¬ä¸\x89æ¬¡', teacherUsername: 'teacher' }
-检查Excel文件路径: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/outputs/ç¬¬ä¸æ¬¡_teacher/output_processed.xlsx
-PDF文件已上传到: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/in/1.pdf
-Excel文件已上传到: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/in/1.xlsx
-开始执行main.py... 考试名称: 第四次 老师账号: teacher
+开始压缩考试报告文件夹: 测试_teacher
+压缩完成，文件大小: 104058 bytes
+获取学生列表参数: { examName: '测试', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+返回学生数据: 36 个学生
+获取学生列表参数: { examName: '测试', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+返回学生数据: 36 个学生
+获取学生列表参数: { examName: '测试', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+返回学生数据: 36 个学生
+获取学生列表参数: { examName: '测试', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+返回学生数据: 36 个学生
+获取学生列表参数: { examName: 'B', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+返回学生数据: 36 个学生
+获取学生列表参数: { examName: '测试', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+返回学生数据: 36 个学生
+获取学生列表参数: { examName: '测试', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/测试_teacher/output_processed.xlsx
+返回学生数据: 36 个学生
+开始压缩考试报告文件夹: 测试_teacher
+压缩完成，文件大小: 104058 bytes
+开始执行main.py... 考试名称: B 老师账号: teacher
+获取进度参数: { examName: 'B', teacherUsername: 'teacher' }
+完整的查询参数: { examName: 'B', teacherUsername: 'teacher' }
+检查Excel文件路径: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+Python stdout: 36
+Python process closed with code: 0
+Python output: 36
+Python error: 
+开始执行main.py... 考试名称: B 老师账号: teacher
+获取进度参数: { examName: 'B', teacherUsername: 'teacher' }
+完整的查询参数: { examName: 'B', teacherUsername: 'teacher' }
+检查Excel文件路径: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+Python stdout: 36
+Python process closed with code: 0
+Python output: 36
+Python error: 
+获取学生列表参数: { examName: 'B', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+返回学生数据: 36 个学生
+获取学生列表参数: { examName: 'B', teacherUsername: 'teacher' }
+最终路径检查 - outDir: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher
+最终路径检查 - processedExcelPath: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+检查out文件夹: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher
+检查Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+找到MD文件: [
+  '丁彦博.md', '付宇乐.md', '刘俊煌.md',
+  '刘劲旋.md', '刘锡.md',   '匡良才.md',
+  '叶文涛.md', '周喜柱.md', '张兆雨.md',
+  '张子航.md', '徐俊浩.md', '施盈滢.md',
+  '曾子轩.md', '朱子源.md', '朱敬一.md',
+  '李昕玥.md', '李雨智.md', '杨婷.md',
+  '林嘉轩.md', '林家锐.md', '沈之尧.md',
+  '漆靖雨.md', '王哲.md',   '程如颖.md',
+  '谢子涵.md', '赵晋锋.md', '邱定权.md',
+  '郑丁亮.md', '郭万淼.md', '阮璞.md',
+  '陈家乐.md', '陈晓璇.md', '陈梓墨.md',
+  '陈森.md',   '陈瀚文.md', '龚爱怡.md'
+]
+读取Excel文件: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/out/B_teacher/output_processed.xlsx
+返回学生数据: 36 个学生

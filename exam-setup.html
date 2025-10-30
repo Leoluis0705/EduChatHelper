@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置考试名称 - 高中英语写作三维反馈系统</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .back-btn {
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .setup-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            margin: 40px auto;
+            text-align: center;
+        }
+        
+        .exam-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 20px 0;
+            box-sizing: border-box;
+        }
+        
+        .exam-input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .start-btn:hover {
+            background: #218838;
+        }
+        
+        .start-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .file-status {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .file-status h3 {
+            margin: 0 0 10px 0;
+            color: #155724;
+        }
+        
+        .file-status p {
+            margin: 5px 0;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>设置考试名称</h1>
+        <button class="back-btn" onclick="goBack()">返回上传</button>
+    </div>
+    
+    <div class="setup-container">
+        <h2>请输入这次考试的名称</h2>
+        
+        <div class="file-status">
+            <h3>已上传文件：</h3>
+            <p id="pdf-status">PDF文件：未上传</p>
+            <p id="excel-status">Excel文件：未上传</p>
+        </div>
+        
+        <input type="text" class="exam-input" id="examName" placeholder="例如：2025年第一次月考" maxlength="50">
+        <button class="start-btn" id="startBtn" onclick="startGrading()" disabled>开始批改</button>
+    </div>
+
+    <script>
+        // 检查文件上传状态
+        window.addEventListener('load', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser || JSON.parse(currentUser).role !== 'teacher') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 检查文件上传状态
+            checkFileStatus();
+        });
+        
+        function checkFileStatus() {
+            // 检查PDF文件
+            fetch('/api/check-files')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.pdfExists) {
+                        document.getElementById('pdf-status').textContent = 'PDF文件：已上传';
+                    }
+                    if (data.excelExists) {
+                        document.getElementById('excel-status').textContent = 'Excel文件：已上传';
+                    }
+                    
+                    // 启用开始批改按钮
+                    if (data.pdfExists && data.excelExists) {
+                        document.getElementById('startBtn').disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('检查文件状态失败:', error);
+                });
+        }
+        
+        function startGrading() {
+            const examName = document.getElementById('examName').value.trim();
+            if (!examName) {
+                alert('请输入考试名称');
+                return;
+            }
+            
+            if (examName.length > 50) {
+                alert('考试名称不能超过50个字符');
+                return;
+            }
+            
+            // 保存考试名称到localStorage
+            localStorage.setItem('currentExam', examName);
+            
+            // 跳转到批改进度页面
+            window.location.href = 'grading-progress.html';
+        }
+        
+
+        
+        function goBack() {
+            window.location.href = 'teacher.html';
+        }
+        
+        // 实时检查输入框内容
+        document.getElementById('examName').addEventListener('input', function() {
+            const examName = this.value.trim();
+            const startBtn = document.getElementById('startBtn');
+            startBtn.disabled = !examName;
+        });
+    </script>
+</body>
+</html>

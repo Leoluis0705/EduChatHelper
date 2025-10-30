@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史报告 - 高中英语写作三维反馈系统</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .back-btn {
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 1400px;
+            width: 95%;
+            margin: 40px auto;
+        }
+        
+        .exam-info {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .exam-info h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .exam-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+        
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+        
+        .student-box {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .student-box:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .student-box.active {
+            background: #4caf50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+        
+        .report-content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            min-height: 500px;
+            display: none;
+        }
+        
+        .student-info {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .student-info h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .info-value {
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .report-tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+        
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: bold;
+        }
+        
+        .tab-button:hover {
+            color: #764ba2;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .grammar-report {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .basic-info-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .basic-info-section h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .info-boxes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-box {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .info-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .box-header {
+            background: #667eea;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin: -15px -15px 10px -15px;
+            font-size: 1rem;
+        }
+        
+        .box-content {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            padding: 5px 0;
+        }
+        
+        .score-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 8px;
+            border: 2px solid #4caf50;
+        }
+        
+        .score-section h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        
+        .original-text-section,
+        .grammar-errors-section,
+        .sentence-review-section,
+        .expression-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .original-text-section h4,
+        .grammar-errors-section h4,
+        .sentence-review-section h4,
+        .expression-section h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .original-text,
+        .grammar-errors {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sentence-review {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .sentence-item {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 3px solid #4caf50;
+        }
+        
+        .sentence-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .sentence-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .expression-list {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .expression-pair {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .expression-pair:last-child {
+            margin-bottom: 0;
+        }
+        
+        .original {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border-left: 3px solid #4caf50;
+            font-weight: 500;
+            text-align: left;
+        }
+        
+        .original::before {
+            content: "📝 我的原文: ";
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .expression {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 3px solid #2196f3;
+            text-align: left;
+        }
+        
+        .expression::before {
+            content: "💡 更多表达: ";
+            font-weight: bold;
+            color: #1565c0;
+        }
+        
+        .evaluation-report {
+            padding: 20px 0;
+        }
+        
+        .score-boxes,
+        .format-boxes,
+        .profile-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comprehensive-boxes {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .highlight-section,
+        .error-section,
+        .suggestion-section {
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        
+        .highlight-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .error-section {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .suggestion-section {
+            background: #e2e3e5;
+            border-left: 4px solid #6c757d;
+        }
+        
+        .format-section,
+        .profile-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .comprehensive-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 8px;
+            border: 2px solid #4caf50;
+        }
+        
+        .evaluation-report h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .plain-text {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: left;
+        }
+        
+        .left-align {
+            text-align: left !important;
+        }
+        
+        .left-align .box-content {
+            text-align: left !important;
+        }
+        
+        .no-data {
+            text-align: center;
+            color: #666;
+            padding: 60px 20px;
+            font-size: 1.1rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 1.2rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>历史报告详情</h1>
+        <button class="back-btn" onclick="goBack()">返回老师首页</button>
+    </div>
+    
+    <div class="container">
+        <div id="examInfo" class="exam-info" style="display: none;">
+            <h2 id="examTitle">考试名称</h2>
+            <p id="examDetails">学生数量: 0 | 文件夹: </p>
+        </div>
+        
+        <div class="student-grid" id="studentGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+                正在加载学生列表...
+            </div>
+        </div>
+        
+        <div class="welcome-message" id="welcomeMessage">
+            <h2>欢迎使用历史报告系统</h2>
+            <p>请点击上方的学生编号查看详细报告</p>
+            <p>每个学生包含语法报告和师生互评报告</p>
+        </div>
+        
+        <div class="report-content" id="reportContent">
+            <div class="student-info" id="studentInfo">
+                <h3>学生基本信息</h3>
+                <div class="info-grid" id="infoGrid">
+                    <!-- 基本信息将动态填充 -->
+                </div>
+            </div>
+            
+            <div class="report-tabs">
+                <button class="tab-button active" data-tab="grammar">语法报告</button>
+                <button class="tab-button" data-tab="evaluation">师生互评报告</button>
+            </div>
+            
+            <div class="tab-content active" id="grammarTab">
+                <div id="grammarContent">
+                    <div class="no-data">请选择学生查看语法报告</div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="evaluationTab">
+                <div id="evaluationContent">
+                    <div class="no-data">请选择学生查看师生互评报告</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 下载报告按钮 -->
+        <div style="text-align: center; margin-top: 40px; padding: 20px;">
+            <button id="downloadReportBtn" class="back-btn" style="background: #28a745; font-size: 16px; padding: 12px 30px;">
+                📥 下载本场考试报告压缩包
+            </button>
+            <div id="downloadStatus" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
+        </div>
+    </div>
+
+    <script>
+        let studentsData = [];
+        let currentStudent = null;
+        let currentHistoryReport = null;
+        
+        function goBack() {
+            window.location.href = 'teacher.html';
+        }
+        
+        // 页面加载时获取学生数据
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudentsData();
+            
+            // 绑定标签页切换事件
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+        });
+        
+        // 加载学生数据
+        function loadStudentsData() {
+            // 优先尝试从历史报告加载
+            let historyReport = JSON.parse(localStorage.getItem('currentHistoryReport') || '{}');
+            let folderName = historyReport.folderName;
+            let examName = historyReport.examName;
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const teacherUsername = currentUser.username || '';
+            
+            // 如果没有历史报告信息，尝试从当前考试加载
+            if (!folderName) {
+                const currentExam = localStorage.getItem('currentExam') || '';
+                if (currentExam) {
+                    examName = currentExam;
+                    folderName = `${examName}_${teacherUsername}`;
+                    
+                    // 创建历史报告对象
+                    historyReport = {
+                        examName: examName,
+                        folderName: folderName,
+                        teacherUsername: teacherUsername,
+                        timestamp: new Date().toISOString()
+                    };
+                    localStorage.setItem('currentHistoryReport', JSON.stringify(historyReport));
+                }
+            }
+            
+            if (!folderName) {
+                document.getElementById('studentGrid').innerHTML = '<div class="error">未找到考试信息，请先开始批改或选择历史报告</div>';
+                return;
+            }
+            
+            currentHistoryReport = historyReport;
+            
+            // 显示考试信息
+            document.getElementById('examInfo').style.display = 'block';
+            document.getElementById('examTitle').textContent = examName;
+            document.getElementById('examDetails').textContent = `文件夹: ${folderName}`;
+            
+            // 正确传递examName参数（考试名称，不是完整文件夹名）
+            let url = `/api/students?examName=${encodeURIComponent(examName)}&teacherUsername=${encodeURIComponent(teacherUsername)}`;
+            
+            console.log('正在加载学生数据，URL:', url);
+            console.log('加载参数:', { examName, teacherUsername, folderName });
+            
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API响应数据:', data);
+                    if (data.success && data.students) {
+                        studentsData = data.students;
+                        displayStudentGrid(studentsData);
+                        
+                        // 显示考试名称
+                        const examInfo = document.getElementById('examDetails');
+                        examInfo.innerHTML = `学生数量: <strong>${studentsData.length}</strong> | 文件夹: ${folderName}`;
+                    } else {
+                        showError('无法加载学生数据: ' + (data.error || '未知错误'));
+                    }
+                })
+                .catch(error => {
+                    console.error('加载学生数据失败:', error);
+                    showError('网络错误: ' + error.message);
+                });
+        }
+        
+        // 显示学生网格
+        function displayStudentGrid(students) {
+            const grid = document.getElementById('studentGrid');
+            grid.innerHTML = '';
+            
+            students.forEach((student, index) => {
+                const studentBox = document.createElement('button');
+                studentBox.className = 'student-box';
+                studentBox.textContent = index + 1;
+                studentBox.title = student.name || `学生 ${index + 1}`;
+                studentBox.onclick = () => selectStudent(student, index);
+                
+                grid.appendChild(studentBox);
+            });
+        }
+        
+        // 选择学生
+        function selectStudent(student, index) {
+            currentStudent = student;
+            
+            // 更新激活状态
+            document.querySelectorAll('.student-box').forEach((box, i) => {
+                box.classList.toggle('active', i === index);
+            });
+            
+            // 隐藏欢迎消息，显示报告内容
+            document.getElementById('welcomeMessage').style.display = 'none';
+            document.getElementById('reportContent').style.display = 'block';
+            
+            // 显示学生基本信息
+            displayStudentInfo(student);
+            
+            // 默认显示语法报告
+            switchTab('grammar');
+        }
+        
+        // 显示学生基本信息
+        function displayStudentInfo(student) {
+            const infoGrid = document.getElementById('infoGrid');
+            infoGrid.innerHTML = '';
+            
+            const basicInfo = [
+                { label: '学号', value: student.studentId || 'N/A' },
+                { label: '姓名', value: student.name || 'N/A' },
+                { label: '学校', value: student.school || 'N/A' },
+                { label: '班级', value: student.class || 'N/A' },
+                { label: '总分', value: student.totalScore || 'N/A' },
+                { label: '等级', value: student.grade || 'N/A' }
+            ];
+            
+            basicInfo.forEach(info => {
+                const infoItem = document.createElement('div');
+                infoItem.className = 'info-item';
+                infoItem.innerHTML = `
+                    <span class="info-label">${info.label}</span>
+                    <span class="info-value">${info.value}</span>
+                `;
+                infoGrid.appendChild(infoItem);
+            });
+        }
+        
+        // 切换标签页
+        function switchTab(tabName) {
+            // 更新按钮状态
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.toggle('active', button.dataset.tab === tabName);
+            });
+            
+            // 更新内容显示
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === tabName + 'Tab');
+            });
+            
+            // 加载对应标签页的内容
+            if (currentStudent) {
+                if (tabName === 'grammar') {
+                    loadGrammarReport(currentStudent);
+                } else if (tabName === 'evaluation') {
+                    loadEvaluationReport(currentStudent);
+                }
+            }
+        }
+        
+        // 加载语法报告
+        function loadGrammarReport(student) {
+            const grammarContent = document.getElementById('grammarContent');
+            grammarContent.innerHTML = '<div class="loading"><div class="spinner"></div>正在加载语法报告...</div>';
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const teacherUsername = currentUser.username || '';
+            const folderName = currentHistoryReport.folderName;
+            
+            let url = `/api/grammar-report/${student.studentId || student.name}?examName=${encodeURIComponent(folderName)}&teacherUsername=${encodeURIComponent(teacherUsername)}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.report) {
+                        displayGrammarReport(data.report);
+                    } else {
+                        grammarContent.innerHTML = '<div class="no-data">暂无语法报告数据</div>';
+                    }
+                })
+                .catch(error => {
+                    grammarContent.innerHTML = '<div class="no-data">加载语法报告失败</div>';
+                });
+        }
+        
+        // 显示语法报告（重新设计的布局）
+        function displayGrammarReport(reportData) {
+            const grammarContent = document.getElementById('grammarContent');
+            
+            if (!reportData || reportData.length === 0) {
+                grammarContent.innerHTML = '<div class="no-data">暂无语法报告数据</div>';
+                return;
+            }
+            
+            // 提取各个模块的数据
+            let data = {};
+            reportData.forEach((item) => {
+                const key = item['项目'] || '';
+                const value = item['内容'] || '';
+                if (key && value) {
+                    data[key] = value;
+                }
+            });
+            
+            let html = '<div class="grammar-report" style="text-align: left;">';
+            
+            // 第一部分：基本信息（两行每行三个方框）
+            html += '<div class="basic-info-section">';
+            html += '<h4>基本信息</h4>';
+            html += '<div class="info-boxes">';
+            
+            // 第一行：序号、学校、班级
+            html += '<div class="info-box">';
+            html += '<div class="box-header">序号</div>';
+            html += `<div class="box-content">${data['序号'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '<div class="info-box">';
+            html += '<div class="box-header">学校</div>';
+            html += `<div class="box-content">${data['学校'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '<div class="info-box">';
+            html += '<div class="box-header">班级</div>';
+            html += `<div class="box-content">${data['班级'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 第二行：姓名、学号、作答时间
+            html += '<div class="info-box">';
+            html += '<div class="box-header">姓名</div>';
+            html += `<div class="box-content">${data['姓名'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '<div class="info-box">';
+            html += '<div class="box-header">学号</div>';
+            html += `<div class="box-content">${data['学号'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '<div class="info-box">';
+            html += '<div class="box-header">作答时间</div>';
+            html += `<div class="box-content">${data['作答时间'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第二部分：得分信息（独立模块）
+            if (data['得分']) {
+                html += '<div class="score-section" style="text-align: center;">';
+                html += '<h4>得分</h4>';
+                html += `<div class="score-value">${data['得分'] || 'N/A'}</div>`;
+                if (data['等级']) {
+                    html += `<div style="font-size: 1.2rem; color: #666; margin-top: 10px;">等级：${data['等级']}</div>`;
+                }
+                html += '</div>';
+            }
+            
+            // 第三部分：我的原文
+            if (data['我的原文']) {
+                html += '<div class="original-text-section">';
+                html += '<h4>我的原文</h4>';
+                html += `<div class="original-text">${data['我的原文']}</div>`;
+                html += '</div>';
+            }
+            
+            // 第四部分：语法错误（删除第一个"（"括号和里面的内容，但保留后面的括号）
+            if (data['语法错误']) {
+                html += '<div class="grammar-errors-section">';
+                html += '<h4>语法错误</h4>';
+                let grammarErrors = data['语法错误'];
+                // 删除第一个"（"括号和里面的内容，但保留后面的括号
+                grammarErrors = grammarErrors.replace(/^（[^）]*）/, '');
+                html += `<div class="grammar-errors">${grammarErrors}</div>`;
+                html += '</div>';
+            }
+            
+            // 第五部分：单句点评
+            if (data['单句点评']) {
+                html += '<div class="sentence-review-section">';
+                html += '<h4>单句点评</h4>';
+                html += formatSentenceReview(data['单句点评']);
+                html += '</div>';
+            }
+            
+            // 第六部分：更多表达
+            if (data['更多表达']) {
+                html += '<div class="expression-section">';
+                html += '<h4>更多表达</h4>';
+                html += formatExpressionList(data['更多表达']);
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            grammarContent.innerHTML = html;
+        }
+        
+        // 格式化单句点评
+        function formatSentenceReview(content) {
+            const lines = content.split('\n');
+            let html = '<div class="sentence-review">';
+            
+            lines.forEach(line => {
+                line = line.trim();
+                if (line) {
+                    // 匹配序号开头的行
+                    if (line.match(/^\d+\./)) {
+                        const number = line.split('.')[0];
+                        const text = line.substring(line.indexOf('.') + 1).trim();
+                        html += `<div class="sentence-item"><span class="sentence-number">${number}</span> ${text}</div>`;
+                    } else if (line) {
+                        html += `<div class="sentence-item">${line}</div>`;
+                    }
+                }
+            });
+            
+            html += '</div>';
+            return html;
+        }
+        
+        // 格式化更多表达
+        function formatExpressionList(content) {
+            const lines = content.split('\n');
+            let html = '<div class="expression-list">';
+            let currentOriginal = '';
+            let currentExpression = '';
+            
+            lines.forEach(line => {
+                line = line.trim();
+                if (line) {
+                    if (line.includes('我的原文:')) {
+                        if (currentOriginal && currentExpression) {
+                            html += `<div class="expression-pair"><div class="original">${currentOriginal}</div><div class="expression">${currentExpression}</div></div>`;
+                        }
+                        currentOriginal = line.replace('我的原文:', '').trim();
+                        currentExpression = '';
+                    } else if (line.includes('更多表达:')) {
+                        currentExpression = line.replace('更多表达:', '').trim();
+                    }
+                }
+            });
+            
+            // 添加最后一对
+            if (currentOriginal && currentExpression) {
+                html += `<div class="expression-pair"><div class="original">${currentOriginal}</div><div class="expression">${currentExpression}</div></div>`;
+            }
+            
+            html += '</div>';
+            return html;
+        }
+        
+        // 加载师生互评报告
+        function loadEvaluationReport(student) {
+            const evaluationContent = document.getElementById('evaluationContent');
+            evaluationContent.innerHTML = '<div class="loading"><div class="spinner"></div>正在加载师生互评报告...</div>';
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const teacherUsername = currentUser.username || '';
+            const folderName = currentHistoryReport.folderName;
+            
+            let url = `/api/evaluation-report/${student.name || student.studentId}?examName=${encodeURIComponent(folderName)}&teacherUsername=${encodeURIComponent(teacherUsername)}`;
+            
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error('报告不存在');
+                    return response.text();
+                })
+                .then(markdown => {
+                    // 解析Markdown内容并提取各个模块数据
+                    const reportData = parseMarkdownReport(markdown);
+                    displayEvaluationReport(reportData);
+                })
+                .catch(error => {
+                    console.error('加载师生互评报告失败:', error);
+                    evaluationContent.innerHTML = '<div class="no-data">加载师生互评报告失败: ' + error.message + '</div>';
+                });
+        }
+        
+        // 解析Markdown报告内容，提取各个模块数据
+        function parseMarkdownReport(markdown) {
+            const data = {};
+            const lines = markdown.split('\n');
+            let currentSection = '';
+            let currentContent = [];
+            
+            lines.forEach(line => {
+                line = line.trim();
+                
+                // 检测模块标题 - 使用实际的标题名称
+                if (line.includes('分项得分')) {
+                    currentSection = '分项得分';
+                    currentContent = [];
+                } else if (line.includes('格式检查')) {
+                    currentSection = '格式检查';
+                    currentContent = [];
+                } else if (line.includes('综合评价')) {
+                    currentSection = '综合评价';
+                    currentContent = [];
+                } else if (line.includes('亮点（优先肯定）')) {
+                    currentSection = '亮点（优先肯定）';
+                    currentContent = [];
+                } else if (line.includes('易错点（具体可改方向）')) {
+                    currentSection = '易错点（具体可改方向）';
+                    currentContent = [];
+                } else if (line.includes('学生画像（学习建议）')) {
+                    currentSection = '学生画像（学习建议）';
+                    currentContent = [];
+                } else if (line.includes('建议方向')) {
+                    currentSection = '建议方向';
+                    currentContent = [];
+                }
+                // 提取具体项目数据 - 改进的解析逻辑
+                else if (line.includes('内容：')) {
+                    data['内容得分'] = extractScoreValue(line, '内容：');
+                } else if (line.includes('结构：')) {
+                    data['结构得分'] = extractScoreValue(line, '结构：');
+                } else if (line.includes('内容格式') || line.includes('**内容格式**')) {
+                    data['内容格式'] = extractFormatContent(lines, currentSection, '内容格式');
+                } else if (line.includes('结构格式') || line.includes('**结构格式**')) {
+                    data['结构格式'] = extractFormatContent(lines, currentSection, '结构格式');
+                } else if (line.includes('**总分**：')) {
+                    data['总分'] = extractTotalValue(line, '**总分**：');
+                } else if (line.includes('**等级**：')) {
+                    data['等级'] = extractGradeValue(line, '**等级**：');
+                } else if (line.includes('**简评**：')) {
+                    data['简评'] = extractCommentValue(line, '**简评**：');
+                } else if (line.includes('词汇水平：')) {
+                    data['词汇水平'] = extractLevelValue(line, '词汇水平：');
+                } else if (line.includes('写作风格：')) {
+                    data['写作风格'] = extractStyleValue(line, '写作风格：');
+                }
+                // 收集模块内容
+                else if (currentSection && line && !line.startsWith('#') && !line.startsWith('##') && !line.startsWith('###')) {
+                    if (line) {
+                        currentContent.push(line);
+                    }
+                }
+                
+                // 保存模块内容
+                if (currentSection && currentContent.length > 0) {
+                    data[currentSection] = currentContent.join('\n');
+                }
+            });
+            
+            return data;
+        }
+        
+        // 从文本行中提取分数值
+        function extractScoreValue(line, key) {
+            const regex = new RegExp(`${key}\\s*(\\d+)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+        
+        // 提取格式检查内容（处理多行格式内容）
+        function extractFormatContent(lines, currentSection, key) {
+            let content = '';
+            let inFormatSection = false;
+            let foundKey = false;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                if (line.includes(key)) {
+                    foundKey = true;
+                    inFormatSection = true;
+                    continue;
+                }
+                
+                if (inFormatSection) {
+                    // 检查是否还在当前格式部分
+                    if (line.startsWith('##') || line.startsWith('#') || (line.includes('格式扣分合计'))) {
+                        break;
+                    }
+                    
+                    if (line && line.startsWith('-') && line.includes('缺失')) {
+                        const cleanLine = line.replace(/^-/, '').replace(/\*\*/g, '').trim();
+                        if (cleanLine) {
+                            content += cleanLine + '\n';
+                        }
+                    }
+                }
+            }
+            
+            // 如果没有找到具体内容，返回默认值
+            if (!foundKey) {
+                return 'N/A';
+            }
+            
+            return content.trim() || '无缺失项';
+        }
+        
+        // 提取格式检查值（处理✅符号和**格式）
+        function extractFormatValue(line, key) {
+            // 处理**加粗格式和符号
+            const regex = new RegExp(`${key}[：:]?\\s*([^\\s]*\\s*[^\\s]*)`);
+            const match = line.match(regex);
+            if (match) {
+                // 清理符号和**格式，只保留文字描述
+                return match[1].replace(/[✅√]/g, '').replace(/\*\*/g, '').trim() || '无缺失项';
+            }
+            return 'N/A';
+        }
+        
+        // 提取总分（处理**格式和空格）
+        function extractTotalValue(line, key) {
+            // 转义正则表达式中的特殊字符
+            const escapedKey = key.replace(/\*/g, '\\*');
+            const regex = new RegExp(`${escapedKey}\\s*：?\\s*(\\d+)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+        
+        // 提取等级（处理**格式和空格）
+        function extractGradeValue(line, key) {
+            // 转义正则表达式中的特殊字符
+            const escapedKey = key.replace(/\*/g, '\\*');
+            const regex = new RegExp(`${escapedKey}\\s*：?\\s*([A-F][+-]?)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+        
+        // 提取简评（处理**格式和冒号）
+        function extractCommentValue(line, key) {
+            // 转义正则表达式中的特殊字符
+            const escapedKey = key.replace(/\*/g, '\\*');
+            const regex = new RegExp(`${escapedKey}\\s*：?\\s*(.+)`);
+            const match = line.match(regex);
+            if (match) {
+                // 清理**格式和多余符号
+                return match[1].replace(/\*\*/g, '').trim();
+            }
+            return 'N/A';
+        }
+        
+        // 提取词汇水平（处理冒号）
+        function extractLevelValue(line, key) {
+            const regex = new RegExp(`${key}\\s*：?\\s*([A-Z]\\d?)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+        
+        // 提取写作风格（处理冒号）
+        function extractStyleValue(line, key) {
+            const regex = new RegExp(`${key}\\s*：?\\s*(.+)`);
+            const match = line.match(regex);
+            return match ? match[1].trim() : 'N/A';
+        }
+        
+        // 显示师生互评报告（重新设计的布局）
+        function displayEvaluationReport(reportData) {
+            const evaluationContent = document.getElementById('evaluationContent');
+            
+            if (!reportData) {
+                evaluationContent.innerHTML = '<div class="no-data">暂无师生互评报告数据</div>';
+                return;
+            }
+            
+            // 处理不同的数据格式
+            let data = {};
+            if (Array.isArray(reportData)) {
+                // 如果是数组格式（类似语法报告）
+                reportData.forEach((item) => {
+                    const key = item['项目'] || '';
+                    const value = item['内容'] || '';
+                    if (key && value) {
+                        data[key] = value;
+                    }
+                });
+            } else if (typeof reportData === 'object') {
+                // 如果是对象格式
+                data = reportData;
+            } else {
+                evaluationContent.innerHTML = '<div class="no-data">数据格式错误</div>';
+                return;
+            }
+            
+            let html = '<div class="evaluation-report">';
+            
+            // 第一个模块：分项得分
+            html += '<div class="score-section">';
+            html += '<h4>分项得分</h4>';
+            html += '<div class="score-boxes">';
+            
+            // 内容得分
+            html += '<div class="info-box">';
+            html += '<div class="box-header">内容得分</div>';
+            html += `<div class="box-content">${data['内容得分'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 结构得分
+            html += '<div class="info-box">';
+            html += '<div class="box-header">结构得分</div>';
+            html += `<div class="box-content">${data['结构得分'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第二个模块：格式检查
+            html += '<div class="format-section">';
+            html += '<h4>格式检查</h4>';
+            html += '<div class="format-boxes">';
+            
+            // 内容格式
+            html += '<div class="info-box">';
+            html += '<div class="box-header">内容格式</div>';
+            html += `<div class="box-content">${data['内容格式'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 结构格式
+            html += '<div class="info-box">';
+            html += '<div class="box-header">结构格式</div>';
+            html += `<div class="box-content">${data['结构格式'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第三个模块：综合评价
+            html += '<div class="comprehensive-section">';
+            html += '<h4>综合评价</h4>';
+            html += '<div class="comprehensive-boxes">';
+            
+            // 总分和等级
+            html += '<div class="info-box">';
+            html += '<div class="box-header">总分和等级</div>';
+            html += `<div class="box-content">${data['总分'] || 'N/A'} ${data['等级'] ? `(${data['等级']})` : ''}</div>`;
+            html += '</div>';
+            
+            // 简评（强制左对齐）
+            html += '<div class="info-box left-align">';
+            html += '<div class="box-header">简评</div>';
+            html += `<div class="box-content">${data['简评'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第四个模块：亮点（优先肯定）
+            html += '<div class="highlight-section">';
+            html += '<h4>亮点</h4>';
+            html += `<div class="plain-text">${data['亮点（优先肯定）'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 第五个模块：易错点（具体可改方向）
+            html += '<div class="error-section">';
+            html += '<h4>易错点（具体可改方向）</h4>';
+            html += `<div class="plain-text">${data['易错点（具体可改方向）'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 第六个模块：学生画像（学习建议）
+            html += '<div class="profile-section">';
+            html += '<h4>学生画像（学习建议）</h4>';
+            html += '<div class="profile-boxes">';
+            
+            // 词汇水平
+            html += '<div class="info-box">';
+            html += '<div class="box-header">词汇水平</div>';
+            html += `<div class="box-content">${data['词汇水平'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 写作风格
+            html += '<div class="info-box">';
+            html += '<div class="box-header">写作风格</div>';
+            html += `<div class="box-content">${data['写作风格'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第七个模块：建议方向（强制左对齐）
+            html += '<div class="suggestion-section">';
+            html += '<h4>建议方向</h4>';
+            html += `<div class="plain-text">${data['建议方向'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            evaluationContent.innerHTML = html;
+        }
+        
+        // 显示错误信息
+        function showError(message) {
+            const grid = document.getElementById('studentGrid');
+            grid.innerHTML = `<div class="error">${message}</div>`;
+        }
+        
+        // 页面加载完成后加载报告数据
+        window.addEventListener('load', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const user = JSON.parse(currentUser);
+            if (user.role !== 'teacher') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 绑定下载按钮事件
+            document.getElementById('downloadReportBtn').addEventListener('click', downloadExamReports);
+        });
+        
+        // 下载考试报告压缩包
+        async function downloadExamReports() {
+            const downloadBtn = document.getElementById('downloadReportBtn');
+            const statusDiv = document.getElementById('downloadStatus');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const teacherUsername = currentUser.username || '';
+            
+            // 从localStorage获取历史报告信息
+            let historyReport = JSON.parse(localStorage.getItem('currentHistoryReport') || '{}');
+            let folderName = historyReport.folderName;
+            let examName = historyReport.examName;
+            
+            // 如果没有历史报告信息，尝试从当前考试加载
+            if (!folderName) {
+                const currentExam = localStorage.getItem('currentExam') || '';
+                if (currentExam) {
+                    examName = currentExam;
+                    folderName = `${examName}_${teacherUsername}`;
+                    
+                    // 创建历史报告对象
+                    historyReport = {
+                        examName: examName,
+                        folderName: folderName,
+                        teacherUsername: teacherUsername,
+                        timestamp: new Date().toISOString()
+                    };
+                    localStorage.setItem('currentHistoryReport', JSON.stringify(historyReport));
+                }
+            }
+            
+            // 调试信息：检查获取到的信息
+            console.log('historyReport:', historyReport);
+            console.log('folderName from localStorage:', folderName);
+            
+            if (!folderName) {
+                statusDiv.innerHTML = '<span style="color: #dc3545;">错误：未找到考试文件夹信息，请先开始批改或选择历史报告</span>';
+                console.error('folderName为空，historyReport:', historyReport);
+                return;
+            }
+            
+            console.log('开始下载，folderName:', folderName, 'teacherUsername:', teacherUsername);
+            
+            try {
+                // 禁用按钮并显示加载状态
+                downloadBtn.disabled = true;
+                downloadBtn.innerHTML = '⏳ 正在压缩中...';
+                statusDiv.innerHTML = '<span style="color: #007bff;">正在压缩考试报告文件，请稍候...</span>';
+                
+                // 调用后端API压缩文件夹
+                const response = await fetch('/api/compress-exam-reports', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        folderName: folderName,
+                        teacherUsername: teacherUsername
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusDiv.innerHTML = '<span style="color: #28a745;">✅ 压缩包创建成功，开始下载...</span>';
+                    
+                    // 使用新的下载API
+                    const downloadResponse = await fetch(result.downloadUrl);
+                    if (!downloadResponse.ok) {
+                        throw new Error('下载文件失败');
+                    }
+                    
+                    // 创建Blob对象并下载
+                    const blob = await downloadResponse.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = url;
+                    downloadLink.download = result.fileName || `${folderName}_reports.zip`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    window.URL.revokeObjectURL(url);
+                    
+                    statusDiv.innerHTML = '<span style="color: #28a745;">✅ 下载完成！压缩包已开始下载。</span>';
+                    
+                    // 延迟清理服务器上的压缩包（10分钟）
+                    setTimeout(() => {
+                        cleanupCompressedFile(result.filePath);
+                    }, 600000);
+                    
+                } else {
+                    throw new Error(result.error || '压缩失败');
+                }
+                
+            } catch (error) {
+                console.error('下载报告失败:', error);
+                statusDiv.innerHTML = `<span style="color: #dc3545;">❌ 下载失败: ${error.message}</span>`;
+            } finally {
+                // 恢复按钮状态
+                setTimeout(() => {
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = '📥 下载本场考试报告压缩包';
+                }, 2000);
+            }
+        }
+        
+        // 清理服务器上的压缩包文件
+        async function cleanupCompressedFile(filePath) {
+            try {
+                const response = await fetch('/api/cleanup-compressed-file', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ filePath: filePath })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('压缩包清理成功');
+                } else {
+                    console.warn('压缩包清理失败:', result.error);
+                }
+            } catch (error) {
+                console.error('清理压缩包时出错:', error);
+            }
+        }
+    </script>
+</body>
+</html>

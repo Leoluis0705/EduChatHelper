@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传Excel文件 - 高中英语写作三维反馈智能体</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .logout-btn {
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            margin: 20px auto;
+        }
+        
+        .upload-section {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 60px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9ff;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+        
+        .upload-area.dragover {
+            border-color: #4caf50;
+            background: #f0fff4;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .file-info {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+        
+        .file-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .remove-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        .remove-btn:hover {
+            background: #ff5252;
+        }
+        
+        .confirm-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .confirm-btn:hover {
+            background: #45a049;
+        }
+        
+        .confirm-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .back-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>老师端 - 高中英语写作三维反馈系统</h1>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
+    </div>
+    <div class="container">
+        <main>
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📊</div>
+                    <div class="upload-text">请上传师生互评作答情况</div>
+                    <div class="upload-hint">点击或拖拽Excel文件到此处 (.xlsx格式)</div>
+                    <input type="file" id="fileInput" accept=".xlsx" hidden>
+                </div>
+                
+                <div class="file-info" id="fileInfo">
+                    <div class="file-name" id="fileName"></div>
+                    <div class="file-actions">
+                        <button class="remove-btn" id="removeBtn">×</button>
+                        <button class="confirm-btn" id="confirmBtn">确认上传</button>
+                    </div>
+                </div>
+                
+
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const removeBtn = document.getElementById('removeBtn');
+            const confirmBtn = document.getElementById('confirmBtn');
+            
+            let selectedFile = null;
+            
+            // 点击上传区域触发文件选择
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // 文件选择变化
+            fileInput.addEventListener('change', function(e) {
+                handleFileSelection(e.target.files[0]);
+            });
+            
+            // 拖拽功能
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileSelection(files[0]);
+                }
+            });
+            
+            // 移除文件
+            removeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                resetFileSelection();
+            });
+            
+            // 确认上传
+            confirmBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (selectedFile) {
+                    handleFileUpload(selectedFile);
+                }
+            });
+            
+            function handleFileSelection(file) {
+                if (!file) return;
+                
+                // 检查文件类型
+                if (!file.name.endsWith('.xlsx') && file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                    alert('请选择Excel文件 (.xlsx格式)！');
+                    return;
+                }
+                
+                // 保存选中的文件
+                selectedFile = file;
+                
+                // 显示文件信息
+                fileName.textContent = file.name;
+                fileInfo.style.display = 'flex';
+                
+                console.log('选择的Excel文件:', file.name, file.size, file.type);
+            }
+            
+            function resetFileSelection() {
+                fileInput.value = '';
+                fileInfo.style.display = 'none';
+                selectedFile = null;
+            }
+            
+            function handleFileUpload(file) {
+                const originalText = uploadArea.querySelector('.upload-text');
+                const originalHint = uploadArea.querySelector('.upload-hint');
+                
+                // 禁用确认按钮
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = '上传中...';
+                
+                originalText.textContent = '上传中...';
+                originalHint.textContent = '正在上传Excel文件到服务器';
+                
+                // 创建FormData对象
+                const formData = new FormData();
+                formData.append('excelFile', file);
+                
+                // 发送到服务器
+                fetch('/upload-excel', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    // 检查响应状态
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`服务器错误 (${response.status}): ${text.substring(0, 200)}`);
+                        });
+                    }
+                    
+                    // 检查响应内容类型
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        // 如果不是JSON响应，尝试读取文本
+                        return response.text().then(text => {
+                            throw new Error(`服务器返回了非JSON响应: ${text.substring(0, 200)}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        originalText.textContent = '上传成功！';
+                        originalHint.textContent = data.message || 'Excel文件已成功上传';
+                        confirmBtn.textContent = '上传完成';
+                        
+                        // 跳转到处理页面
+                        setTimeout(() => {
+                            window.location.href = 'processing.html';
+                        }, 1000);
+                    } else {
+                        throw new Error(data?.error || '上传失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('上传错误:', error);
+                    originalText.textContent = '上传失败';
+                    originalHint.textContent = error.message || '请检查服务器连接';
+                    confirmBtn.textContent = '重新上传';
+                    confirmBtn.disabled = false;
+                    
+                    // 5秒后恢复原始状态
+                    setTimeout(() => {
+                        originalText.textContent = '请上传师生互评作答情况';
+                        originalHint.textContent = '点击或拖拽Excel文件到此处 (.xlsx格式)';
+                    }, 5000);
+                });
+            }
+        });
+        
+        // 检查登录状态
+        window.addEventListener('load', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const user = JSON.parse(currentUser);
+            if (user.role !== 'teacher') {
+                window.location.href = 'index.html';
+                return;
+            }
+        });
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

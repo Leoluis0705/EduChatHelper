@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的考试报告 - 高中英语写作三维反馈系统</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="student-reports.css">
+</head>
+<body>
+    <div class="header">
+        <h1>我的考试报告</h1>
+        <div class="header-buttons">
+            <button class="logout-btn" onclick="logout()">退出登录</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="welcome-section">
+            <h2>欢迎查看考试报告</h2>
+            <p>以下是您参与过的所有考试，点击考试名称查看详细报告</p>
+        </div>
+        
+        <div class="exam-grid" id="examGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+                正在加载考试列表...
+            </div>
+        </div>
+        
+        <div class="welcome-message" id="welcomeMessage">
+            <h2>欢迎使用学生报告系统</h2>
+            <p>请点击上方的考试名称查看详细报告</p>
+            <p>每场考试包含语法报告和师生互评报告</p>
+        </div>
+        
+        <div class="report-content" id="reportContent">
+            <div class="student-info" id="studentInfo">
+                <h3>学生基本信息</h3>
+                <div class="info-grid" id="infoGrid">
+                    <!-- 基本信息将动态填充 -->
+                </div>
+            </div>
+            
+            <div class="report-tabs">
+                <button class="tab-button active" data-tab="grammar">语法报告</button>
+                <button class="tab-button" data-tab="evaluation">师生互评报告</button>
+            </div>
+            
+            <div class="tab-content active" id="grammarTab">
+                <div id="grammarContent">
+                    <div class="no-data">请选择考试查看语法报告</div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="evaluationTab">
+                <div id="evaluationContent">
+                    <div class="no-data">请选择考试查看师生互评报告</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="student-reports.js"></script>
+</body>
+</html>

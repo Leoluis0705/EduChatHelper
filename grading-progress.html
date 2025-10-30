@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批改进度 - 高中英语写作三维反馈系统</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .logout-btn {
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            margin: 40px auto;
+            text-align: center;
+        }
+        
+        .progress-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+        
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #4caf50;
+            color: white;
+            font-size: 2.5rem;
+            line-height: 60px;
+            margin: 30px auto;
+            animation: scaleIn 0.5s ease;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .status-message {
+            font-size: 1.2rem;
+            color: #666;
+            margin: 20px 0;
+        }
+        
+
+
+        
+        .report-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+            display: none;
+        }
+        
+        .report-btn:hover {
+            background: #45a049;
+        }
+        
+        /* 删除重试按钮样式 */
+        
+        .progress-bar-container {
+            margin: 30px 0;
+        }
+        
+        .progress-bar {
+            background: #f0f0f0;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            background: #4caf50;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            font-size: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>老师端 - 高中英语写作三维反馈系统</h1>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
+    </div>
+    
+    <div class="container progress-container">
+        <h2 style="color: #333; margin-bottom: 30px;">批改进度</h2>
+        
+        <div class="spinner" id="spinner"></div>
+        <div class="checkmark" id="checkmark">✓</div>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressPercentage">0%</span>
+                <span> (</span>
+                <span id="currentProgress">0</span>
+                <span>/</span>
+                <span id="totalStudents">1</span>
+                <span> 名学生)</span>
+            </div>
+        </div>
+        
+        <div class="status-message" id="statusMessage">
+            正在启动批改程序...
+        </div>
+        
+        <div class="button-group">
+            <button class="report-btn" id="reportBtn" onclick="viewReports()">
+                查看报告
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        let progressInterval;
+        
+        // 页面加载后立即开始批改
+        window.addEventListener('load', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser || JSON.parse(currentUser).role !== 'teacher') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            console.log('页面加载完成，开始批改流程');
+            console.log('当前用户:', JSON.parse(currentUser));
+            console.log('当前考试:', localStorage.getItem('currentExam'));
+            
+            // 检查考试名称是否存在
+            const examName = localStorage.getItem('currentExam');
+            if (!examName) {
+                console.error('考试名称为空，无法开始批改');
+                document.getElementById('statusMessage').textContent = '错误：未找到考试名称，请重新设置考试';
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('checkmark').style.display = 'block';
+                document.getElementById('checkmark').style.background = '#ff6b6b';
+                document.getElementById('checkmark').textContent = '✗';
+                return;
+            }
+            
+            startGrading();
+        });
+        
+        function startGrading() {
+            const examName = localStorage.getItem('currentExam');
+            if (!examName) {
+                alert('未找到考试名称，请重新设置');
+                window.location.href = 'exam-setup.html';
+                return;
+            }
+            
+            document.getElementById('statusMessage').textContent = 
+                `正在为考试"${examName}"执行批改程序...`;
+            
+            // 获取当前登录的老师账号
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const teacherUsername = currentUser ? currentUser.username : '';
+            
+            // 检查服务器状态
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(statusData => {
+                    if (statusData.status === 'ok') {
+                        // 服务器正常，调用批改API
+                        return fetch('/api/run-main', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                examName: examName,
+                                teacherUsername: teacherUsername
+                            })
+                        });
+                    } else {
+                        throw new Error('服务器状态异常');
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 批改开始成功，立即开始监控进度
+                        console.log('批改程序已启动，开始监控进度...');
+                        // 立即执行一次进度更新
+                        updateProgress();
+                        // 确保清除之前的定时器
+                        if (progressInterval) {
+                            clearInterval(progressInterval);
+                        }
+                        // 开始每3秒自动更新进度
+                        progressInterval = setInterval(updateProgress, 3000);
+                        console.log('开始每3秒自动监控批改进度...');
+                    } else {
+                        // 批改启动失败，但继续监控进度
+                        console.log('批改启动返回失败状态，但继续监控进度');
+                        document.getElementById('statusMessage').textContent = 
+                            '正在启动批改程序，请稍候...';
+                        // 继续监控进度
+                        updateProgress();
+                        progressInterval = setInterval(updateProgress, 3000);
+                    }
+                })
+                .catch(error => {
+                    console.error('批改请求失败:', error);
+                    // 即使请求失败，也继续监控进度
+                    console.log('批改请求失败，但继续监控进度');
+                    document.getElementById('statusMessage').textContent = 
+                        '正在启动批改程序，请稍候...';
+                    // 继续监控进度
+                    updateProgress();
+                    progressInterval = setInterval(updateProgress, 3000);
+                });
+        }
+        
+        function updateProgress() {
+            const examName = localStorage.getItem('currentExam') || '';
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const teacherUsername = currentUser ? currentUser.username : '';
+            
+            console.log('正在获取进度，考试名称:', examName, '老师账号:', teacherUsername, '时间:', new Date().toLocaleTimeString());
+            
+            // 如果考试名称为空，显示错误信息
+            if (!examName) {
+                console.error('考试名称为空，无法获取进度');
+                document.getElementById('statusMessage').textContent = '错误：未找到考试名称，请重新设置考试';
+                return;
+            }
+            
+            fetch(`/api/progress?examName=${encodeURIComponent(examName)}&teacherUsername=${encodeURIComponent(teacherUsername)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API返回的数据:', data);
+                    const percentage = data.percentage || 0;
+                    const currentProgress = data.currentProgress || 0;
+                    const totalStudents = data.totalStudents || 1;
+                    
+                    console.log('更新进度条:', percentage + '%', currentProgress + '/' + totalStudents);
+                    
+                    // 更新进度条
+                    document.getElementById('progressFill').style.width = percentage + '%';
+                    document.getElementById('progressPercentage').textContent = percentage + '%';
+                    document.getElementById('currentProgress').textContent = currentProgress;
+                    document.getElementById('totalStudents').textContent = totalStudents;
+                    
+                    // 更新状态消息
+                    if (percentage === 0) {
+                        document.getElementById('statusMessage').textContent = 
+                            `批改程序已启动，正在初始化...`;
+                    } else if (percentage < 100) {
+                        document.getElementById('statusMessage').textContent = 
+                            `正在生成报告... ${currentProgress}/${totalStudents} 名学生已完成 (${percentage}%)`;
+                    } else if (percentage === 100) {
+                        document.getElementById('statusMessage').textContent = 
+                            `批改完成！${currentProgress}/${totalStudents} 名学生的报告已生成`;
+                        // 停止进度监控
+                        clearInterval(progressInterval);
+                        // 显示完成图标和报告按钮
+                        document.getElementById('spinner').style.display = 'none';
+                        document.getElementById('checkmark').style.display = 'block';
+                        document.getElementById('reportBtn').style.display = 'inline-block';
+                    }
+                    
+                    // 如果进度完成且tables文件存在，显示查看报告按钮
+                    if (percentage === 100 && data.tablesFileExists) {
+                        document.getElementById('reportBtn').style.display = 'inline-block';
+                    }
+                })
+                .catch(error => {
+                    console.error('获取进度失败:', error);
+                    // 添加错误显示到页面
+                    document.getElementById('statusMessage').textContent = 
+                        '获取进度失败: ' + error.message;
+                });
+        }
+        
+        function viewReports() {
+            // 获取当前考试信息并保存到历史报告
+            const examName = localStorage.getItem('currentExam') || '';
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const teacherUsername = currentUser.username || '';
+            
+            if (!examName) {
+                alert('未找到考试信息，请重新设置考试');
+                return;
+            }
+            
+            // 构建文件夹名称：考试名称_老师账号
+            const folderName = `${examName}_${teacherUsername}`;
+            
+            // 保存当前考试信息到历史报告
+            const historyReport = {
+                examName: examName,
+                folderName: folderName,
+                teacherUsername: teacherUsername,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('currentHistoryReport', JSON.stringify(historyReport));
+            
+            // 跳转到历史报告页面
+            window.location.href = 'history-reports.html';
+        }
+        
+        // 删除重试按钮相关功能
+        
+        // 页面加载时立即显示当前进度并启动自动更新
+        function showCurrentProgress() {
+            const examName = localStorage.getItem('currentExam') || '';
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const teacherUsername = currentUser ? currentUser.username : '';
+            
+            if (examName) {
+                console.log('页面加载时检查当前进度...');
+                // 立即更新一次进度
+                updateProgress();
+                // 确保清除之前的定时器
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                }
+                // 启动每3秒自动更新
+                progressInterval = setInterval(updateProgress, 3000);
+                console.log('页面加载后启动每3秒自动更新进度');
+            }
+        }
+        
+        // 页面加载后立即显示进度并启动自动更新
+        setTimeout(showCurrentProgress, 100);
+        
+
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentExam');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>师生互评报告测试</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 复制reports.html中的样式 */
+        .reports-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .reports-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 20px;
+        }
+        
+        .info-box {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .info-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .box-header {
+            background: #667eea;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin: -15px -15px 10px -15px;
+            font-size: 1rem;
+        }
+        
+        .box-content {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            padding: 5px 0;
+        }
+        
+        /* 师生互评报告专用样式 */
+        .evaluation-report {
+            padding: 20px 0;
+        }
+        
+        .score-boxes,
+        .format-boxes,
+        .profile-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comprehensive-boxes {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .highlight-section,
+        .error-section,
+        .suggestion-section {
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        
+        .highlight-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .error-section {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .suggestion-section {
+            background: #e2e3e5;
+            border-left: 4px solid #6c757d;
+        }
+        
+        .format-section,
+        .profile-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .comprehensive-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 8px;
+            border: 2px solid #4caf50;
+        }
+        
+        .evaluation-report h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .evaluation-report .plain-text {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container reports-container">
+        <header class="reports-header">
+            <h1>师生互评报告测试</h1>
+            <p>测试新的师生互评报告布局</p>
+        </header>
+        
+        <div id="evaluationContent">
+            <div class="loading">正在加载测试数据...</div>
+        </div>
+        
+        <div class="action-buttons" style="margin-top: 30px; text-align: center;">
+            <button class="btn" onclick="window.location.href='reports.html'">
+                返回报告页面
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // 加载测试数据并显示
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('test-evaluation.md')
+                .then(response => response.text())
+                .then(markdown => {
+                    // 解析Markdown内容并提取各个模块数据
+                    const reportData = parseMarkdownReport(markdown);
+                    displayEvaluationReport(reportData);
+                })
+                .catch(error => {
+                    document.getElementById('evaluationContent').innerHTML = '<div class="no-data">加载测试数据失败: ' + error.message + '</div>';
+                });
+        });
+        
+        // 解析Markdown报告内容，提取各个模块数据
+        function parseMarkdownReport(markdown) {
+            const data = {};
+            const lines = markdown.split('\n');
+            let currentSection = '';
+            let currentContent = '';
+            
+            lines.forEach(line => {
+                line = line.trim();
+                
+                // 检测模块标题
+                if (line.includes('得分') && !line.includes('总分')) {
+                    currentSection = '得分';
+                    currentContent = '';
+                } else if (line.includes('格式评价')) {
+                    currentSection = '格式评价';
+                    currentContent = '';
+                } else if (line.includes('综合评分')) {
+                    currentSection = '综合评分';
+                    currentContent = '';
+                } else if (line.includes('亮点')) {
+                    currentSection = '亮点';
+                    currentContent = '';
+                } else if (line.includes('易错点')) {
+                    currentSection = '易错点';
+                    currentContent = '';
+                } else if (line.includes('学生画像')) {
+                    currentSection = '学生画像';
+                    currentContent = '';
+                } else if (line.includes('建议方向')) {
+                    currentSection = '建议方向';
+                    currentContent = '';
+                }
+                // 提取具体项目
+                else if (line.includes('内容得分')) {
+                    data['内容得分'] = extractValue(line, '内容得分');
+                } else if (line.includes('结构得分')) {
+                    data['结构得分'] = extractValue(line, '结构得分');
+                } else if (line.includes('内容格式')) {
+                    data['内容格式'] = extractValue(line, '内容格式');
+                } else if (line.includes('结构格式')) {
+                    data['结构格式'] = extractValue(line, '结构格式');
+                } else if (line.includes('总分')) {
+                    data['总分'] = extractValue(line, '总分');
+                } else if (line.includes('等级')) {
+                    data['等级'] = extractValue(line, '等级');
+                } else if (line.includes('简评')) {
+                    data['简评'] = extractValue(line, '简评');
+                } else if (line.includes('词汇水平')) {
+                    data['词汇水平'] = extractValue(line, '词汇水平');
+                } else if (line.includes('写作风格')) {
+                    data['写作风格'] = extractValue(line, '写作风格');
+                }
+                // 收集模块内容
+                else if (currentSection && line && !line.startsWith('#') && !line.startsWith('##')) {
+                    if (currentContent) currentContent += '\n';
+                    currentContent += line;
+                }
+                
+                // 保存模块内容
+                if (currentSection && currentContent) {
+                    data[currentSection] = currentContent;
+                }
+            });
+            
+            return data;
+        }
+        
+        // 从文本行中提取数值
+        function extractValue(line, key) {
+            const regex = new RegExp(`${key}[：:]?\\s*([^\\s]+)`);
+            const match = line.match(regex);
+            return match ? match[1] : 'N/A';
+        }
+        
+        // 显示师生互评报告（重新设计的布局）
+        function displayEvaluationReport(reportData) {
+            const evaluationContent = document.getElementById('evaluationContent');
+            
+            if (!reportData) {
+                evaluationContent.innerHTML = '<div class="no-data">暂无师生互评报告数据</div>';
+                return;
+            }
+            
+            // 处理不同的数据格式
+            let data = {};
+            if (Array.isArray(reportData)) {
+                // 如果是数组格式（类似语法报告）
+                reportData.forEach((item) => {
+                    const key = item['项目'] || '';
+                    const value = item['内容'] || '';
+                    if (key && value) {
+                        data[key] = value;
+                    }
+                });
+            } else if (typeof reportData === 'object') {
+                // 如果是对象格式
+                data = reportData;
+            } else {
+                evaluationContent.innerHTML = '<div class="no-data">数据格式错误</div>';
+                return;
+            }
+            
+            let html = '<div class="evaluation-report" style="text-align: center;">';
+            
+            // 第一个模块：分项得分（得分）
+            html += '<div class="score-section">';
+            html += '<h4>得分</h4>';
+            html += '<div class="score-boxes">';
+            
+            // 内容得分
+            html += '<div class="info-box">';
+            html += '<div class="box-header">内容得分</div>';
+            html += `<div class="box-content">${data['内容得分'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 结构得分
+            html += '<div class="info-box">';
+            html += '<div class="box-header">结构得分</div>';
+            html += `<div class="box-content">${data['结构得分'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第二个模块：格式评价
+            html += '<div class="format-section">';
+            html += '<h4>格式评价</h4>';
+            html += '<div class="format-boxes">';
+            
+            // 内容格式
+            html += '<div class="info-box">';
+            html += '<div class="box-header">内容格式</div>';
+            html += `<div class="box-content">${data['内容格式'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 结构格式
+            html += '<div class="info-box">';
+            html += '<div class="box-header">结构格式</div>';
+            html += `<div class="box-content">${data['结构格式'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第三个模块：综合评分
+            html += '<div class="comprehensive-section">';
+            html += '<h4>综合评分</h4>';
+            html += '<div class="comprehensive-boxes">';
+            
+            // 总分和等级
+            html += '<div class="info-box">';
+            html += '<div class="box-header">总分和等级</div>';
+            html += `<div class="box-content">${data['总分'] || 'N/A'} ${data['等级'] ? `(${data['等级']})` : ''}</div>`;
+            html += '</div>';
+            
+            // 简评（强制左对齐）
+            html += '<div class="info-box" style="text-align: left;">';
+            html += '<div class="box-header">简评</div>';
+            html += `<div class="box-content" style="text-align: left;">${data['简评'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第四个模块：亮点（强制左对齐）
+            html += '<div class="highlight-section">';
+            html += '<h4 style="text-align: center;">亮点（优先肯定）</h4>';
+            html += `<div class="plain-text">${data['亮点'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 第五个模块：易错点（强制左对齐）
+            html += '<div class="error-section">';
+            html += '<h4 style="text-align: center;">易错点（具体可改方向）</h4>';
+            html += `<div class="plain-text">${data['易错点'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 第六个模块：学生画像
+            html += '<div class="profile-section">';
+            html += '<h4>学生画像（学习建议）</h4>';
+            html += '<div class="profile-boxes">';
+            
+            // 词汇水平
+            html += '<div class="info-box">';
+            html += '<div class="box-header">词汇水平</div>';
+            html += `<div class="box-content">${data['词汇水平'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            // 写作风格
+            html += '<div class="info-box">';
+            html += '<div class="box-header">写作风格</div>';
+            html += `<div class="box-content">${data['写作风格'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // 第七个模块：建议方向（强制左对齐）
+            html += '<div class="suggestion-section">';
+            html += '<h4 style="text-align: center;">建议方向</h4>';
+            html += `<div class="plain-text">${data['建议方向'] || 'N/A'}</div>`;
+            html += '</div>';
+            
+            html += '</div>';
+            evaluationContent.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

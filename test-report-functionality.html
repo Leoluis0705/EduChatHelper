@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报告功能测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>报告展示功能测试</h1>
+    
+    <div class="test-section">
+        <h3>1. 测试学生列表API</h3>
+        <button onclick="testStudentsAPI()">测试学生列表</button>
+        <div id="studentsResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. 测试语法报告API</h3>
+        <button onclick="testGrammarAPI()">测试语法报告</button>
+        <div id="grammarResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. 测试师生互评报告API</h3>
+        <button onclick="testEvaluationAPI()">测试师生互评报告</button>
+        <div id="evaluationResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. 打开报告展示页面</h3>
+        <button onclick="window.open('report.html', '_blank')">打开报告页面</button>
+        <button onclick="window.open('reports.html', '_blank')">打开详细报告页面</button>
+    </div>
+    
+    <script>
+        function testStudentsAPI() {
+            const resultDiv = document.getElementById('studentsResult');
+            resultDiv.innerHTML = '<div>正在测试...</div>';
+            
+            fetch('/api/students')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        resultDiv.innerHTML = `
+                            <div class="success">✓ 学生列表API测试成功</div>
+                            <div>学生总数: ${data.total}</div>
+                            <div>第一个学生: ${data.students[0].name} (ID: ${data.students[0].studentId})</div>
+                            <pre>${JSON.stringify(data.students.slice(0, 3), null, 2)}</pre>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `<div class="error">✗ 学生列表API返回失败: ${data.error}</div>`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `<div class="error">✗ 学生列表API测试失败: ${error.message}</div>`;
+                });
+        }
+        
+        function testGrammarAPI() {
+            const resultDiv = document.getElementById('grammarResult');
+            resultDiv.innerHTML = '<div>正在测试...</div>';
+            
+            fetch('/api/grammar-report/1')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        resultDiv.innerHTML = `
+                            <div class="success">✓ 语法报告API测试成功</div>
+                            <div>学生: ${data.student.name}</div>
+                            <div>报告数据行数: ${data.report.length}</div>
+                            <pre>${JSON.stringify(data.report.slice(0, 5), null, 2)}</pre>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `<div class="error">✗ 语法报告API返回失败: ${data.error}</div>`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `<div class="error">✗ 语法报告API测试失败: ${error.message}</div>`;
+                });
+        }
+        
+        function testEvaluationAPI() {
+            const resultDiv = document.getElementById('evaluationResult');
+            resultDiv.innerHTML = '<div>正在测试...</div>';
+            
+            fetch('/api/evaluation-report/丁彦博')
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.text();
+                })
+                .then(text => {
+                    resultDiv.innerHTML = `
+                        <div class="success">✓ 师生互评报告API测试成功</div>
+                        <div>内容长度: ${text.length} 字符</div>
+                        <div>前200字符预览:</div>
+                        <pre>${text.substring(0, 200)}...</pre>
+                    `;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `<div class="error">✗ 师生互评报告API测试失败: ${error.message}</div>`;
+                });
+        }
+    </script>
+</body>
+</html>
