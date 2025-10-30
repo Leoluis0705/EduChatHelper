@@ -1,0 +1,20 @@
+genre_overrides:
+  应用文:
+    subgenres:
+      道歉信:
+        required_fields: [称呼, 致歉事由, 承担责任/解释(克制), 改进/补救措施, 结束致意, 署名/日期]
+        penalties: {缺致歉与责任表述: -5, 无补救措施: -5}
+      祝贺信:
+        required_fields: [称呼, 致贺事项, 积极评价/意义, 祝愿/期待, 结束致意, 署名/日期]
+      简历:
+        required_fields: [姓名与联系方式, 教育背景, 技能/证书, 经历/项目/实践]
+      备忘录:
+        required_fields: [收件人/抬头, 主题, 背景/问题, 要点/决议, 行动项与责任人, 日期/署名]
+      会议纪要:
+        required_fields: [会议主题与时间地点, 参会人员, 议程要点, 决议与行动项, 记录人/日期]
+      通知英文版:
+        required_fields: [Title, Audience/Subject, Date & Venue, Key Points, Issuer/Signature, Date]
+  新闻/报告:
+    subgenres:
+      新闻述评:
+        required_fields: [标题, 新闻事实简述, 观点与立场, 论据与多方视角, 逻辑推演, 结论或建议]
