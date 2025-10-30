@@ -1,0 +1,18 @@
+[Unit]
+Description=EduChatGrader Web Application
+After=network.target
+
+[Service]
+Type=forking
+User=root
+WorkingDirectory=/www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project
+Environment=PATH=/www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/venv/bin:/usr/bin:/usr/local/bin
+ExecStart=/www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/start_services.sh
+ExecStop=/bin/bash -c 'pkill -f "python start_server.py"; pkill -f "node server.js"'
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

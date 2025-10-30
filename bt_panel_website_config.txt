@@ -1,0 +1,40 @@
+# 宝塔面板网站配置指南 - EduChatGrader
+
+## 1. 创建网站
+- 域名: agent.hongyanink.com
+- 根目录: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/web
+- PHP版本: 纯静态
+
+## 2. 反向代理配置
+在网站设置中添加反向代理：
+- 目标URL: http://127.0.0.1:3000
+- 发送域名: $host
+- 代理目录: /
+
+## 3. API代理配置
+添加第二个反向代理：
+- 目标URL: http://127.0.0.1:5000
+- 发送域名: $host
+- 代理目录: /api
+
+## 4. 启动服务
+在宝塔面板的计划任务中添加启动脚本：
+
+```bash
+cd /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project
+source venv/bin/activate
+nohup python start_server.py > logs/python_server.log 2>&1 &
+cd web
+nohup node server.js > ../logs/node_server.log 2>&1 &
+```
+
+## 5. 防火墙设置
+确保宝塔面板防火墙开放端口：
+- 3000 (前端)
+- 5000 (后端)
+
+## 6. 访问地址
+- 前端界面: http://agent.hongyanink.com
+- API接口: http://agent.hongyanink.com/api
+
+服务器IP: 172.19.50.222

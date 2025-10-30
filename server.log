@@ -1,0 +1,9 @@
+nohup: ignoring input
+服务器运行在 http://localhost:3000
+请确保main.py文件存在于项目根目录
+文件上传路径: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/in
+获取进度参数: { examName: 'ç¬¬ä¸\x89æ¬¡', teacherUsername: 'teacher' }
+检查Excel文件路径: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/outputs/ç¬¬ä¸æ¬¡_teacher/output_processed.xlsx
+PDF文件已上传到: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/in/1.pdf
+Excel文件已上传到: /www/wwwroot/agent.hongyanink.com/EduChatGrader_full_project/in/1.xlsx
+开始执行main.py... 考试名称: 第四次 老师账号: teacher
